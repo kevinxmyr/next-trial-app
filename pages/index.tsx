@@ -53,6 +53,6 @@ export const getServerSideProps = async () => {
       },
     };
   } catch (error) {
-    console.log("error has occured", error);
+    console.log("error has occurred", error);
   }
 };
