@@ -1,5 +1,7 @@
-import Image from "next/image";
+import { FaArrowRight } from "react-icons/fa";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/router";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,11 +25,17 @@ export default function Home({ data }: { data: Tdata[] }) {
     return <>no data from getSServerSideProps.</>;
   }
 
+  const router = useRouter();
+
   return (
     <div className="flex flex-col items-center justify-center">
       <h1 className="text-3xl font-extrabold uppercase text-center">
-        this is a server side rendered page
+        this is a server side rendered page HOMEPAGE
       </h1>
+
+      <Button className="bg-slate-600" onClick={() => router.push("/chat")}>
+        chat page <FaArrowRight size={10}/>
+      </Button>
 
       <ul>
         {data &&

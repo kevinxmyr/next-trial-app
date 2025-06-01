@@ -14,6 +14,11 @@ function MyForm({}: Props) {
   const [maxValueError, setMaxValueError] = React.useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
+  useEffect(() => {
+    //focus onto the textarea when on loan of the page and when submit button is pressed
+    textareaRef.current?.focus();
+  }, [])
+
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const inputs = e.currentTarget;

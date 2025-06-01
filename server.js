@@ -12,7 +12,12 @@ app.prepare().then(() => {
   const httpServer = createServer(handler);
 
   const io = new Server(httpServer, {
-    connectionStateRecovery: {}
+    connectionStateRecovery: {},
+    cors: {
+      origin: "*",
+      // origin: "https://portfolio2025.up.railway.app",//URL here kung san naka deploy ang server.js,
+      methods: ["GET", "POST"]
+    }
   });
 
   io.on("connection", (socket) => {

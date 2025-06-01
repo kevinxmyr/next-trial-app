@@ -5,23 +5,41 @@ import { useEffect, useState } from "react";
 import { socket } from "../../socket.js";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/router.js";
+import ChatHeader from "../../mycomponents/ChatHeader";
 
 export default function Chat() {
   const [isConnected, setIsConnected] = useState(false);
   const [transport, setTransport] = useState("N/A");
-  const [chatList, setChatList] = useState<string[]>([]);
+  const [chatList, setChatList] = useState<string[]>([
+
+  ]);
   const rooms = ["general", "tech", "random"];
   const route = useRouter();
+  const pathname = route.pathname?.slice(1);
 
-  useEffect(() => {
-    // CHECKIN IF THE API FOLDER IS STILL WORKING KASI MERON AKONG CUSTOM SERVER
-    async function getAPI() {
-      const response = await axios.get("http://localhost:3000/api/hello");
-      const data = response.data;
-      console.log(data.name);
-    }
-    getAPI();
-  }, []);
+  useEffect(() => { //.POPULATE CHATLIST
+    (
+      async () => {
+        const resp = await axios.get('https://dummyjson.com/users');
+        const data = await resp.data;
+        console.log(data.users);
+        // setChatList((prev) => [...prev, data.users.firstName]);
+        setChatList(data.users.map((user: any) => user.university))
+      }
+    )()
+
+  }, [])
+
+
+  // useEffect(() => {
+  //   // CHECKIN IF THE API FOLDER IS STILL WORKING KASI MERON AKONG CUSTOM SERVER
+  //   async function getAPI() {
+  //     const response = await axios.get("http://localhost:3000/api/hello");
+  //     const data = response.data;
+  //     console.log(data.name);
+  //   }
+  //   getAPI();
+  // }, []);
 
   useEffect(() => {
     if (!socket) return;
@@ -30,9 +48,10 @@ export default function Chat() {
       onConnect();
     }
 
-    let timer: NodeJS.Timeout;
+    // let timer: NodeJS.Timeout; //for testing purposes para ma dc lang after 10 seconds
     function onConnect() {
       console.log(`recovered? ${socket?.recovered}`);
+      console.log("Connected to backend via Socket.IO");
 
       // timer = setTimeout(() => {
       //   if(socket?.io.engine){
@@ -75,7 +94,7 @@ export default function Chat() {
     const settingMessage = (data: string) => {
       console.log(chatList);
       setChatList((prev) => [...prev, data]);
-    }
+    };
     socket?.on("chat message", settingMessage);
 
     return () => {
@@ -88,8 +107,33 @@ export default function Chat() {
     return route.push(`/chat/${room}`);
   }
 
-  return (
-    // <div className="flex flex-col items-center justify-center gap-10">
+  return <>
+      <div className=" md:grid md:grid-cols-4 h-svh">
+
+        <ChatHeader chatRoom={pathname} />
+
+        <div className="hidden md:block col-span-1 bg-blue-500 p-4">
+          <p>Left Column (25%)</p>
+        </div>
+
+        <div className="flex flex-col place-content-end h-[calc(100vh-4.5rem)] md:col-span-3">
+
+          <div className="overflow-scroll max-h-[calc(100vh-8rem)]">
+            <ChatList chatlists={chatList} />
+          </div>
+
+          <div className="p-4 w-full">
+            <MyForm />
+          </div>
+        </div>
+
+      </div>
+    </>
+}
+
+//! ITONG NASA BABA PANG CHECK KUNG CONNECTED
+
+  // <div className="flex flex-col items-center justify-center gap-10">
 
     //   <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight flex flex-col justify-center items-center">
     //     <span>Transport Protocol: {transport}</span>
@@ -108,22 +152,3 @@ export default function Chat() {
     //   <ChatList chatlists={chatList} />
 
     // </div>
-    <div className=" md:grid md:grid-cols-4 h-svh">
-      <div className="hidden md:block col-span-1 bg-blue-500 p-4">
-        <p>Left Column (25%)</p>
-      </div>
-
-      <div className="flex flex-col place-content-end h-svh md:col-span-3">
-        {/* <p>Right Column (75%)</p>
-        <p className="text-white sm:text-blue-500 md:text-red-500 lg:text-pink-500">HELLO</p> */}
-
-        <ChatList chatlists={chatList} />
-
-        <div className="p-4 w-full">
-          <MyForm />
-        </div>
-
-      </div>
-    </div>
-  );
-}
