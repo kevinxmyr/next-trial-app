@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: nextjs-app
+    env: node
+    buildCommand: npm install && npm run build && npm run export
+    startCommand: npm run start
+    envVars:
+      - key: NODE_VERSION
+        value: 18
+      - key: NODE_ENV
+        value: production
+    plan: free # change to 'starter', 'standard', etc. if needed
+    autoDeploy: true
+    buildFilter:
+      paths:
+        - ./*
