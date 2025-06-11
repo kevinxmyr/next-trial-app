@@ -10,7 +10,7 @@ import { io } from "socket.io-client";
 
 const URL =
   process.env.NODE_ENV === "production"
-    ? "https://portfolio2025.up.railway.app"
+    ? "https://nextjs-app-opvm.onrender.com"
     : typeof window !== "undefined" && window.location.hostname === "localhost"
     ? "http://localhost:3000"
     : "http://192.168.1.30:3000";
