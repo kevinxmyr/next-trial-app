@@ -27,7 +27,7 @@ function IdChat({}: Props) {
   }, [router, rooms]); // router is a dependency, as are roomId (via router.query.id) and rooms
 
   // Once router.query.id is available and validated, display it
-  return <ChatContainer chatlist={["room 1", "room 2", "room 3", "room 1", "room 2", "room 3"]} />;
+  return <ChatContainer />;
 }
 
 export default IdChat;
