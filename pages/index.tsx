@@ -21,46 +21,52 @@ type Tdata = {
 };
 
 export default function Home({ data }: { data: Tdata[] }) {
-  if (!data) {
-    return <>no data from getSServerSideProps.</>;
-  }
+  // if (!data) {
+  //   return (
+  //     <>
+  //       no data from getSServerSideProps.{" "}
+  //     </>
+  //   );
+  // }
 
   const router = useRouter();
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <h1 className="text-3xl font-extrabold uppercase text-center">
-        this is a server side rendered page HOMEPAGE
-      </h1>
-
+    <>
+      Index Page
       <Button className="bg-slate-600" onClick={() => router.push("/chat")}>
-        chat page <FaArrowRight size={10}/>
+        chat page <FaArrowRight size={10} />
       </Button>
+    </>
+    // <div className="flex flex-col items-center justify-center">
+    //   <h1 className="text-3xl font-extrabold uppercase text-center">
+    //     this is a server side rendered page HOMEPAGE
+    //   </h1>
 
-      <ul>
-        {data &&
-          data.map((d) => (
-            <li key={d.id}>
-              <p>TITLE: {d.title}</p>
-              <span>STATUS: {d?.completed?.toString()}</span>
-            </li>
-          ))}
-      </ul>
-    </div>
+    //   <ul>
+    //     {data &&
+    //       data.map((d) => (
+    //         <li key={d.id}>
+    //           <p>TITLE: {d.title}</p>
+    //           <span>STATUS: {d?.completed?.toString()}</span>
+    //         </li>
+    //       ))}
+    //   </ul>
+    // </div>
   );
 }
 
-export const getServerSideProps = async () => {
-  try {
-    const response = await fetch("https://jsonplaceholder.typicode.com/todos");
-    const data = await response.json();
+// export const getServerSideProps = async () => {
+//   try {
+//     const response = await fetch("https://jsonplaceholder.typicode.com/todos");
+//     const data = await response.json();
 
-    return {
-      props: {
-        data,
-      },
-    };
-  } catch (error) {
-    console.log("error has occurred", error);
-  }
-};
+//     return {
+//       props: {
+//         data,
+//       },
+//     };
+//   } catch (error) {
+//     console.log("error has occurred", error);
+//   }
+// };

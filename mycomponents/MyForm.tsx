@@ -19,16 +19,18 @@ function MyForm({}: Props) {
     textareaRef.current?.focus();
   }, [])
 
+
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const inputs = e.currentTarget;
     const [input2] = Array.from(inputs).slice(0, 1) as HTMLInputElement[];
-    if (input2.value === "") return;
+    if (!input2.value) return;
     const message = input2.value;
     socket?.emit("chat message", message);
     input2.value = "";
     if (textareaRef.current) {
       textareaRef.current.value = "";
+      textareaRef.current.focus();
     }
     handleInput();
   }
@@ -59,6 +61,7 @@ function MyForm({}: Props) {
 
     if (inputValue.length === 0) {
       textarea.style.height = "2.3rem";
+      textarea.style.overflow = "hidden";
     }
     // Apply borderRadius based on number of lines
     if (lineCount >= 3) {

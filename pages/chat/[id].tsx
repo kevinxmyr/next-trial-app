@@ -1,35 +1,33 @@
+import ChatContainer from "@/mycomponents/ChatContainer";
+import ChatHeader from "@/mycomponents/ChatHeader";
+import ChatList from "@/mycomponents/ChatList";
 import MyForm from "@/mycomponents/MyForm";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface Props {} // If you don't have props, you can remove this interface
 
 function IdChat({}: Props) {
-  const rooms = ["general", "tech", "random"];
+  const rooms = ["tech", "random"];
   const router = useRouter();
+
+  //! FETCH THE DATA FROM DATABASE AYON SA ROOM NAME
 
   useEffect(() => {
     // Ensure router.query.id exists and is not undefined before checking
+
+    console.log(router.query.id);
+
     if (router.query.id) {
       const roomId = router.query.id as string;
       if (!rooms.includes(roomId)) {
-        router.push("/404");
+        console.log("room not found");
       }
     }
-  }, [router, router.query.id, rooms]); // router is a dependency, as are roomId (via router.query.id) and rooms
-
-  // You might want to show a loading state until router.query.id is available
-  if (!router.query.id) {
-    return <div>Loading room...</div>;
-  }
+  }, [router, rooms]); // router is a dependency, as are roomId (via router.query.id) and rooms
 
   // Once router.query.id is available and validated, display it
-  return (
-    <div>
-      Welcome to the {router.query.id} room!
-      <MyForm />
-    </div>
-  );
+  return <ChatContainer chatlist={["room 1", "room 2", "room 3", "room 1", "room 2", "room 3"]} />;
 }
 
 export default IdChat;

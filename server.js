@@ -30,7 +30,7 @@ app.prepare().then(() => {
     }
 
     socket.on('chat message', (data) => {
-      console.log({from: "server.js", data: data, message_from_client: data, socketID: socket.id});
+      if(process.env.NODE_ENV === "development") console.log({from: "server.js", data, message_from_client: data, socketID: socket.id});
       // socket.emit("chat message", data, result.lastID)
       // socket.broadcast.emit("chat message", data) //broadcast to all clients except the sender
       io.emit("chat message", data) //broadcast to all clients
