@@ -2,6 +2,8 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+DEPLOYED IN: https://nextjs-app-opvm.onrender.com AS OF JUNE 2025
+
 First, run the development server:
 
 ```bash
