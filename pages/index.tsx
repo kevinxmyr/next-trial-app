@@ -2,6 +2,9 @@ import { FaArrowRight } from "react-icons/fa";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { Toaster, toast } from "sonner";
+import SuccessToast from "@/mycomponents/Toasts/SuccessToast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,10 +36,18 @@ export default function Home({ data }: { data: Tdata[] }) {
 
   return (
     <>
+    <Toaster />
       Index Page
       <Button className="bg-slate-600" onClick={() => router.push("/chat")}>
         chat page <FaArrowRight size={10} />
       </Button>
+      <Button onClick={() => toast("Event has been created", {
+          description: "Sunday, December 03, 2023 at 9:00 AM",
+          action: {
+            label: "Undo",
+            onClick: () => console.log("Undo"),
+          },
+        })}>show toast</Button>
     </>
     // <div className="flex flex-col items-center justify-center">
     //   <h1 className="text-3xl font-extrabold uppercase text-center">

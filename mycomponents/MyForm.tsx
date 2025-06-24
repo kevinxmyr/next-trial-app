@@ -6,13 +6,20 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { toast } from "sonner";
+import { useUserStore } from "@/store";
+import { useUserStoreType } from "@/pages/chat";
+import { validate as uuidValidate } from 'uuid';
 
-type Props = {};
+type Props = {
+  bottomRef: React.RefObject<HTMLDivElement | null>;
+};
 
-function MyForm({}: Props) {
+function MyForm({bottomRef}: Props) {
   const [inputValue, setInputValue] = React.useState<string>("");
   const [maxValueError, setMaxValueError] = React.useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const { nouserfound, setNouserfound } = useUserStore() as useUserStoreType;
 
   useEffect(() => {
     //focus onto the textarea when on loan of the page and when submit button is pressed
@@ -21,6 +28,13 @@ function MyForm({}: Props) {
 
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    const isUserFound = localStorage.getItem("username");
+    const isUsernameValid = uuidValidate(isUserFound);
+    if (!isUserFound || !isUsernameValid) {
+      toast.error("No user found, please create a username");
+      setNouserfound(true);
+      return;
+    }
     e.preventDefault();
     const inputs = e.currentTarget;
     const [input2] = Array.from(inputs).slice(0, 1) as HTMLInputElement[];
@@ -43,7 +57,7 @@ function MyForm({}: Props) {
     const textarea = textareaRef.current;
     if (!textarea) return;
 
-    setInputValue(textarea.value);
+    setInputValue(textarea.value.replace(/\n/g, ""));
 
     // Reset height to auto to recalculate
     textarea.style.height = "auto";
@@ -78,6 +92,8 @@ function MyForm({}: Props) {
     if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
       e.preventDefault();
       console.log("ctrl+enter submit from MyForm");
+      console.log(inputValue.includes('\n'));
+      if(inputValue.length === 0) return;
       return onSubmit(e);
     }
   };

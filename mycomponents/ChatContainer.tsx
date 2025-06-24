@@ -1,22 +1,28 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useRef } from "react";
 import ChatHeader from "./ChatHeader";
 import ChatList from "./ChatList";
 import MyForm from "./MyForm";
 import { useRouter } from "next/router";
 import { Button } from "@/components/ui/button";
 import { FaChevronLeft } from "react-icons/fa";
+import { Dot } from "./Dot";
+import { DotIcon } from "lucide-react";
+
 
 type Props = {
+  isConnected?: boolean;
+  transport?: string;
 };
 
-function ChatContainer({ }: Props) {
+function ChatContainer({ isConnected, transport }: Props) {
   const router = useRouter();
   const pathname = (router.query.id as string) ?? "chat";
+  const bottomRef = useRef<HTMLDivElement>(null); // FROM: CHATLIST COMPONENT
 
   // console.log(pathname);
 
   return (
-    <div className=" md:grid md:grid-cols-4 h-dvh border-2">
+    <div className=" md:grid md:grid-cols-4 h-dvh">
       <div className="sticky top-0">
         {pathname !== "chat" ? (
           <div className="relative flex items-center p-2">
@@ -46,11 +52,12 @@ function ChatContainer({ }: Props) {
                 Random
               </Button>
             </div>
-            <div
-              className="mx-auto"
-              //   style={{ padding: "1rem" }}
-            >
+            <div className="mx-auto flex gap-2 items-center">
               <ChatHeader chatRoom={pathname} />
+              {isConnected && <Dot size="2" color="green" />}
+              {!isConnected && <Dot size="2" color="red" />}
+              {transport === 'polling' && <Dot size="2" color="yellow" />}
+              {transport === 'websocket' && <Dot size="2" color="blue" />}
             </div>
           </div>
         )}
@@ -62,15 +69,16 @@ function ChatContainer({ }: Props) {
 
       <div className="flex flex-col place-content-center md:col-span-3">
         {/* h-[calc(100vh-4.5rem)]  */}
-        <div className="overflow-scroll border-2 border-cyan-500 ">
+        <div className="overflow-scroll border- border-opacity-25">
           {/* max-h-[calc(100vh-5rem)] */}
           <ChatList
+          bottomRef={bottomRef}
             height={"h-[calc(100svh-7.9rem)]"}
             />
         </div>
 
         <div className="px-4 py-3 w-full">
-          <MyForm />
+          <MyForm bottomRef={bottomRef}/>
         </div>
       </div>
     </div>

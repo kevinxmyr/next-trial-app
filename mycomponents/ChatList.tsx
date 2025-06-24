@@ -11,16 +11,17 @@ import { Badge } from "@/components/ui/badge";
 
 type Props = {
   height?: string;
+  bottomRef?: React.RefObject<HTMLDivElement | null>;
 };
 
-function ChatList({ height }: Props) {
+function ChatList({ height, bottomRef }: Props) {
   let heightValue = height;
   if (typeof height === undefined) {
     heightValue = `h-[calc(100svh-7.9rem)]`;
   }
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const bottomRef = useRef<HTMLDivElement>(null);
+
   const topdivref = useRef<HTMLDivElement>(null);
   // This state is used to control the visibility of the "fetch new data" button at the top of the chat list.
   // When the user is at the top of the chat list, the button is visible, and when the user is not at the top, the button is hidden.
@@ -32,14 +33,14 @@ function ChatList({ height }: Props) {
     width: 0,
   });
 
-  const { chatListStore, setChatListStore } = useChatListStore();
+  const { chatListStore, setChatListStore, setMessageHistory } = useChatListStore();
 
   //check if the container is overflowing and check if to fetch new data. if the chat list is not occupaying to overflow, then fetch new data
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
     setIsOverflowing(container.scrollHeight > container.clientHeight);
-  }, [chatListStore]);
+  }, [chatListStore, windowResize]);
 
   const isUserNearBottom = () => {
     const container = containerRef.current;
@@ -105,12 +106,12 @@ function ChatList({ height }: Props) {
         const entry = entries[0];
         if (entry.isIntersecting && !isVisible && isOverflowing) {
           const randomStrings = Array.from({ length: 1 }, () =>
-            Math.random().toString(36),
+            Math.random().toString(12),
           );
           setIsVisible(true);
           setLoading(true);
           const id = setTimeout(() => {
-            setChatListStore(randomStrings[0]);
+            setMessageHistory(randomStrings[0]);
             setLoading(false);
           }, 2000);
           return () => {
@@ -138,7 +139,7 @@ function ChatList({ height }: Props) {
 
     if (isUserNearBottom() === true) {
       console.log(isUserNearBottom());
-      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+      bottomRef?.current?.scrollIntoView({ behavior: "smooth" });
     } else {
       console.log(isUserNearBottom());
     }
@@ -184,7 +185,7 @@ function ChatList({ height }: Props) {
       className={`relativeflex flex-col gap-2 px-4 overflow-scroll ${heightValue}`}
     >
       <div
-        className="flex justify-center py-2 duration-500 transition-all"
+        className="flex justify-center py-2 duration-500 transition-all h-0 w-0"
         ref={topdivref}
       >
         {loading && (
@@ -208,9 +209,16 @@ function ChatList({ height }: Props) {
             {" "}
             {chatlist}
             {/*//! CAUSING HYDRATION ERROR! <span className="text-xs">{new Date().toLocaleString()}</span> add here the time from database */}
-            '''''{windowResize.height}by{windowResize.width}
+            {/* {windowResize.height}by{windowResize.width} */}
           </li>
         ))}
+        {/* {
+          chatListStore?.length === 0 && (
+            <li className="flex flex-col gap-1">
+              No messages yet
+            </li>
+          )
+        } */}
       </ul>
       <div ref={bottomRef} />
 
