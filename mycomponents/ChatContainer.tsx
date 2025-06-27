@@ -1,13 +1,10 @@
-import React, { Dispatch, SetStateAction, useRef } from "react";
+import React, { useRef } from "react";
+import { useRouter } from "next/router";
 import ChatHeader from "./ChatHeader";
+import { Dot } from "lucide-react";
 import ChatList from "./ChatList";
 import MyForm from "./MyForm";
-import { useRouter } from "next/router";
-import { Button } from "@/components/ui/button";
-import { FaChevronLeft } from "react-icons/fa";
-import { Dot } from "./Dot";
-import { DotIcon } from "lucide-react";
-
+import SideBarSheetMobile from "./ChatRouteComp/SideBarSheetMobile";
 
 type Props = {
   isConnected?: boolean;
@@ -22,65 +19,34 @@ function ChatContainer({ isConnected, transport }: Props) {
   // console.log(pathname);
 
   return (
-    <div className=" md:grid md:grid-cols-4 h-dvh">
-      <div className="sticky top-0">
-        {pathname !== "chat" ? (
-          <div className="relative flex items-center p-2">
-            {/* Left-aligned Button */}
-            <div className="absolute left-2">
-              <Button variant="ghost" onClick={() => router.push("/chat")}>
-                <FaChevronLeft />
-                General
-              </Button>
-            </div>
+    <div className="border-2">
+      {/* CHAT HEADER */}
 
-            {/* Centered ChatHeader */}
-            <div className="mx-auto">
-              <ChatHeader chatRoom={pathname} />
-            </div>
-          </div>
-        ) : (
-          <div className="relative flex p-2">
-            <div className="flex gap-2 absolute left-2">
-              <Button variant="ghost" onClick={() => router.push("/chat/tech")}>
-                Tech
-              </Button>
-              <Button
-                variant="ghost"
-                onClick={() => router.push("/chat/random")}
-              >
-                Random
-              </Button>
-            </div>
-            <div className="mx-auto flex gap-2 items-center">
-              <ChatHeader chatRoom={pathname} />
-              {isConnected && <Dot size="2" color="green" />}
-              {!isConnected && <Dot size="2" color="red" />}
-              {transport === 'polling' && <Dot size="2" color="yellow" />}
-              {transport === 'websocket' && <Dot size="2" color="blue" />}
-            </div>
-          </div>
-        )}
+      <div className="relative flex p-2 justify-center border-2 border-black">
+      <SideBarSheetMobile menulist={["General", "Tech", "Random"]} />
+        <div className="mx-auto flex gap-2 items-center">
+          <ChatHeader chatRoom={pathname} />
+          {isConnected && <Dot size="2" color="green" />}
+          {!isConnected && <Dot size="2" color="red" />}
+          {transport === "polling" && <Dot size="2" color="yellow" />}
+          {transport === "websocket" && <Dot size="2" color="blue" />}
+        </div>
       </div>
 
-      <div className="hidden md:block col-span-1 bg-blue-500 p-4">
-        <p>Left Column (25%)</p>
-      </div>
-
+      {/* CHATLIST */}
       <div className="flex flex-col place-content-center md:col-span-3">
         {/* h-[calc(100vh-4.5rem)]  */}
         <div className="overflow-scroll border- border-opacity-25">
           {/* max-h-[calc(100vh-5rem)] */}
-          <ChatList
-          bottomRef={bottomRef}
-            height={"h-[calc(100svh-7.9rem)]"}
-            />
+          <ChatList bottomRef={bottomRef} height={"h-[calc(100svh-7.9rem)]"} />
         </div>
 
+        {/* FORM CHATTAN */}
         <div className="px-4 py-3 w-full">
-          <MyForm bottomRef={bottomRef}/>
+          <MyForm bottomRef={bottomRef} />
         </div>
       </div>
+
     </div>
   );
 }

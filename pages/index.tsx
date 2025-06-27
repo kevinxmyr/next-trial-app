@@ -2,9 +2,8 @@ import { FaArrowRight } from "react-icons/fa";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 import { Toaster, toast } from "sonner";
-import SuccessToast from "@/mycomponents/Toasts/SuccessToast";
+import ToggleDarkMode from "@/mycomponents/ToggleDarkMode";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,6 +35,7 @@ export default function Home({ data }: { data: Tdata[] }) {
 
   return (
     <>
+    <ToggleDarkMode/>
     <Toaster />
       Index Page
       <Button className="bg-slate-600" onClick={() => router.push("/chat")}>
